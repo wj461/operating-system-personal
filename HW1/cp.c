@@ -21,7 +21,6 @@ int main(int argc, char *argv[]) {
   char source[100];
   while (fgets(source, 100, fptr_source) != NULL) {
     fputs(source, fptr_target);
-    printf("do\n");
   }
 
   int err = fclose(fptr_source);
