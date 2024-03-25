@@ -1,5 +1,8 @@
+#include <fcntl.h>
 #include <stdio.h>
-#include <threads.h>
+#include <unistd.h>
+
+#define BUFFER_SIZE 1024
 
 int main(int argc, char *argv[]) {
   if (argc != 3) {
@@ -7,31 +10,40 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  FILE *fptr_source;
-  FILE *fptr_target;
+  int file_descriptor_source, file_descriptor_target;
+  ssize_t bytes_read, bytes_write;
+  char buffer[BUFFER_SIZE];
 
-  fptr_source = fopen(argv[1], "r");
-  fptr_target = fopen(argv[2], "w");
-
-  if (fptr_source == NULL || fptr_target == NULL) {
-    perror("The file could not be opened\n");
+  file_descriptor_source = open(argv[1], O_RDONLY);
+  if (file_descriptor_source == -1) {
+    perror("Error opening file source");
+    return 1;
+  }
+  file_descriptor_target = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0777);
+  if (file_descriptor_target == -1) {
+    perror("Error opening file target");
     return 1;
   }
 
-  char source[100];
-  while (fgets(source, 100, fptr_source) != NULL) {
-    fputs(source, fptr_target);
+  while ((bytes_read = read(file_descriptor_source, buffer, BUFFER_SIZE)) > 0) {
+    bytes_write = write(file_descriptor_target, buffer, bytes_read);
+    if (bytes_write != bytes_read) {
+      perror("Error writing to file");
+      return 1;
+    }
   }
 
-  int err = fclose(fptr_source);
-  if (err != 0) {
-    perror("The file could not be closed\n");
+  if (bytes_read == -1) {
+    perror("Error reading from file");
     return 1;
   }
 
-  err = fclose(fptr_target);
-  if (err != 0) {
-    perror("The file could not be closed\n");
+  if (close(file_descriptor_source) == -1) {
+    perror("Error closing source file source");
+    return 1;
+  }
+  if (close(file_descriptor_target) == -1) {
+    perror("Error closing target file source");
     return 1;
   }
 

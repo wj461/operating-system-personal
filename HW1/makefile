@@ -8,3 +8,4 @@ build: cp.o time_mmap.o time_pipe.o
 clean:
 	rm -f *.exe
 	rm -f *.o
+	rm target.*
