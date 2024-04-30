@@ -62,14 +62,11 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  pthread_mutex_lock(&lock);
   pthread_cond_wait(&cond, &lock);
   for (int i = 0; i < n; i++) {
     printf("%ld ", thread_args.fibonacci[i]);
   }
   printf("\n");
-
-  pthread_mutex_unlock(&lock);
 
   return 0;
 }
