@@ -1,4 +1,5 @@
 #import "@preview/timeliney:0.0.1"
+
 #align(center, text(17pt)[
  \u{1F995}*Operating-system homework\#3 * \u{1F996}
 ])
@@ -6,7 +7,6 @@
 #(text(14pt)[
 = Written exercises 
 ])
-
 
 = • Chap.7
 - 7.8: The Linux kernel has a policy that a process cannot hold a spinlock while attempting to acquire a semaphore. Explain why this policy is in place.\
